@@ -1,4 +1,5 @@
 require_relative('../db/sql_runner')
+require_relative('./star')
 class Movie
   attr_reader :id
   attr_accessor :title, :genre, :rating
@@ -60,5 +61,19 @@ class Movie
     ;"
     values = [@id]
     SqlRunner.run(sql, values)
+  end
+
+  def stars()
+      sql = "
+        SELECT stars.* FROM stars
+        INNER JOIN castings
+        ON stars.id = star_id
+        INNER JOIN movies
+        ON movies.id = movie_id
+        WHERE movies.id = $1
+      ;"
+      values = [@id]
+      stars_array = SqlRunner.run(sql, values)
+      return stars_array.map { |star| Star.new(star) }
   end
 end
