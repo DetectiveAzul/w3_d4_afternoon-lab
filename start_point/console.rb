@@ -3,6 +3,10 @@ require_relative('./models/movie')
 require_relative('./models/star')
 require_relative('./models/casting')
 
+Casting.delete_all()
+Movie.delete_all()
+Star.delete_all()
+
 star01 = Star.new({'f_name' => 'Nicholas', 'l_name' => 'Cage'})
 star02 = Star.new({'f_name' => 'John', 'l_name' => 'Malkovich'})
 star03 = Star.new({'f_name' => 'John', 'l_name' => 'Travolta'})
@@ -39,5 +43,5 @@ casting05.save()
 casting06.save()
 casting07.save()
 
-# binding.pry()
+binding.pry()
 nil

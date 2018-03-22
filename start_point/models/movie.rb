@@ -9,6 +9,27 @@ class Movie
     @rating = options['rating'].to_f
   end
 
+  def self.all()
+    sql = "SELECT * FROM movies;"
+    result = SqlRunner.run(sql)
+    return result.map { |movie| Movie.new(movie) }
+  end
+
+  def self.delete_all()
+    sql = "DELETE FROM movies;"
+    SqlRunner.run(sql)
+  end
+
+  def self.find_by_id(id)
+    sql = "
+      SELECT * FROM movies
+      WHERE id = $1
+    ;"
+    values = [id]
+    result = SqlRunner.run( sql, values )
+    return Movie.new(result.first) unless result.first == nil
+  end
+
   def save()
     sql = "
     INSERT INTO movies
@@ -20,5 +41,24 @@ class Movie
     values = [@title, @genre, @rating]
     result = SqlRunner.run(sql, values)
     @id = result[0]['id']
+  end
+
+  def update()
+    sql = "
+    UPDATE movies
+    SET (title, genre, rating) =
+    ($1, $2, $3)
+    WHERE id = $4
+    ;"
+    values = [@title, @genre, @rating, @id]
+    SqlRunner.run(sql, values)
+  end
+
+  def delete()
+    sql = "DELETE FROM movies
+      WHERE id = $1
+    ;"
+    values = [@id]
+    SqlRunner.run(sql, values)
   end
 end
