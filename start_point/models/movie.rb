@@ -35,12 +35,12 @@ class Movie
   def save()
     sql = "
     INSERT INTO movies
-    (title, genre, rating)
+    (title, genre, rating, budget)
     VALUES
-    ($1, $2, $3)
+    ($1, $2, $3, $4)
     RETURNING id
     ;"
-    values = [@title, @genre, @rating]
+    values = [@title, @genre, @rating, @budget]
     result = SqlRunner.run(sql, values)
     @id = result[0]['id']
   end
@@ -48,11 +48,11 @@ class Movie
   def update()
     sql = "
     UPDATE movies
-    SET (title, genre, rating) =
-    ($1, $2, $3)
-    WHERE id = $4
+    SET (title, genre, rating, budget) =
+    ($1, $2, $3, $4)
+    WHERE id = $5
     ;"
-    values = [@title, @genre, @rating, @id]
+    values = [@title, @genre, @rating, @budget, @id]
     SqlRunner.run(sql, values)
   end
 
