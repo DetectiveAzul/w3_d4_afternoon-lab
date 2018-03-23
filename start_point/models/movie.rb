@@ -1,5 +1,6 @@
 require_relative('../db/sql_runner')
 require_relative('./star')
+require_relative('./casting')
 class Movie
   attr_reader :id
   attr_accessor :title, :genre, :rating, :budget
@@ -78,15 +79,17 @@ class Movie
       return stars_array.map { |star| Star.new(star) }
   end
 
-  def remaining_budget()
-    sql = "
-    SELECT fee from castings
-    WHERE movie_id = $1;
-    ;"
+  def castings()
+    sql = "SELECT * FROM castings where movie_id = $1"
     values = [@id]
-    array_of_fees = SqlRunner.run(sql, values)
-    result = @budget
-    array_of_fees.each { |fee| result -= fee['fee'].to_i }
-    return result
+    casting_data = SqlRunner.run(sql, values)
+    return casting_data.map{|casting| Casting.new(casting)}
+  end
+
+  def remaining_budget()
+    castings = self.castings()
+    castings_fee = castings.map { |casting| casting.fee }
+    combined_fee = casting_fee.sum
+    return @budget - combined_fee
   end
 end
