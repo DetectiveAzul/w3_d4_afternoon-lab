@@ -89,7 +89,7 @@ class Movie
   def remaining_budget()
     castings = self.castings()
     castings_fee = castings.map { |casting| casting.fee }
-    combined_fee = casting_fee.sum
+    combined_fee = castings_fee.sum
     return @budget - combined_fee
   end
 end
